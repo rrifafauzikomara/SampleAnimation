@@ -51,5 +51,4 @@ public class MainActivity extends AppCompatActivity {
         image.startAnimation(slideAnim);
     }
 
-
 }
