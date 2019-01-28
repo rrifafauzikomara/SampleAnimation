@@ -2,10 +2,16 @@ package id.osg3.sampleanimation;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.transition.ChangeBounds;
+import android.transition.ChangeImageTransform;
+import android.transition.TransitionManager;
+import android.transition.TransitionSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,6 +19,29 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        final ViewGroup transitionsContainer = findViewById(R.id.transitions_container);
+        final ImageView imageView = findViewById(R.id.image);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            boolean mExpanded;
+            @Override
+            public void onClick(View v) {
+                mExpanded = !mExpanded;
+                TransitionManager.beginDelayedTransition(transitionsContainer, new TransitionSet()
+                        .addTransition(new ChangeBounds())
+                        .addTransition(new ChangeImageTransform()));
+
+                ViewGroup.LayoutParams params = imageView.getLayoutParams();
+                params.height = mExpanded ? ViewGroup.LayoutParams.WRAP_CONTENT :
+                        ViewGroup.LayoutParams.WRAP_CONTENT;
+                imageView.setLayoutParams(params);
+
+                imageView.setScaleType(mExpanded ? ImageView.ScaleType.CENTER_CROP :
+                        ImageView.ScaleType.FIT_CENTER);
+            }
+        });
+
     }
 
     public void clockwise(View view){
@@ -46,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void slide(View view){
-        ImageView image = findViewById(R.id.image);
+        TextView textView = findViewById(R.id.textSlide);
         Animation slideAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide);
-        image.startAnimation(slideAnim);
+        textView.startAnimation(slideAnim);
     }
 
 }
